@@ -1,7 +1,7 @@
 # TNGMS Training Management System - Angular Project
 
 ## Project Overview
-This is the Angular conversion of the TNGMS HTML project.
+This is the Angular conversion of the TNGMS Angular project.
 
 ## Tech Stack
 - Angular 17+
