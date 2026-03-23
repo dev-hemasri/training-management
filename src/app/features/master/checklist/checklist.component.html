@@ -1,0 +1,117 @@
+<!-- src/app/features/master/checklist/checklist.component.html -->
+<app-layout pageTitle="Checklist">
+
+  <div class="d-flex justify-content-end align-items-center mt-3 mb-2 gap-2">
+    <div class="input-group" style="width:250px;">
+      <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
+      <input type="text" class="form-control border-start-0 ps-0"
+             placeholder="Search Checklist..." [(ngModel)]="searchText">
+    </div>
+    <button class="btn btn-rounded btn-dark" (click)="openNewModal()">
+      <i class="fa fa-plus me-1"></i> New Checklist
+    </button>
+  </div>
+
+  <table class="table shadow">
+    <thead class="table-dark">
+      <tr><th>Type</th><th>Training Type</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of filteredList">
+        <td class="text-capitalize">{{ c.trainingMode }}</td>
+        <td class="text-capitalize">{{ c.trainingType }}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-1" (click)="viewChecklist(c)">View</button>
+          <button class="btn btn-sm btn-outline-warning" (click)="editChecklist(c)">Edit</button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredList.length === 0">
+        <td colspan="3" class="text-center">No checklists found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Create/Edit Checklist Modal -->
+  <div class="modal fade" id="checklistModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header border-bottom pb-3">
+          <h5 class="modal-title">{{ isEditMode ? 'Edit' : 'New' }} Checklist</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="mb-3 col-sm-6">
+              <label>Mode</label>
+              <select class="form-control" [(ngModel)]="form.trainingMode" [disabled]="isEditMode">
+                <option value="">--Select--</option>
+                <option value="Online">Online</option>
+                <option value="Offline">Offline</option>
+              </select>
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Training Type</label>
+              <select class="form-control" [(ngModel)]="form.trainingType" [disabled]="isEditMode">
+                <option value="">--Select--</option>
+                <option value="Academic">Academic</option>
+                <option value="Non - Academic">Non - Academic</option>
+              </select>
+            </div>
+          </div>
+          <hr>
+          <!-- Checklist builder -->
+          <div *ngFor="let item of form.items; let i = index" class="mb-2">
+            <div class="d-flex align-items-center gap-2">
+              <input type="text" class="form-control" [(ngModel)]="item.name" placeholder="Parent item">
+              <button class="btn btn-outline-success btn-sm" (click)="addChild(item)">
+                <i class="fa fa-plus"></i>
+              </button>
+              <button class="btn btn-outline-danger btn-sm" (click)="removeItem(form.items, i)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+            <div *ngFor="let child of item.sub; let j = index" class="ms-4 mt-1 d-flex align-items-center gap-2">
+              <input type="text" class="form-control" [(ngModel)]="child.name" placeholder="Child item">
+              <button class="btn btn-outline-danger btn-sm" (click)="removeItem(item.sub, j)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <button class="btn btn-outline-primary mt-2" (click)="addParent()">
+            <i class="fa fa-plus"></i> Add Parent Item
+          </button>
+          <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-danger me-3" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-success" (click)="saveChecklist()" [disabled]="isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+              Save Checklist
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Modal -->
+  <div class="modal fade" id="viewChecklistModal" tabindex="-1">
+    <div class="modal-dialog modal-md modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Checklist Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="viewItems.length === 0" class="text-center text-muted">No items found.</div>
+          <ul *ngFor="let item of viewItems">
+            <li><strong>{{ item.name }}</strong>
+              <ul *ngFor="let child of item.sub">
+                <li>{{ child.name }}</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-layout>

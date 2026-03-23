@@ -1,0 +1,93 @@
+<!-- src/app/shared/components/sidebar/sidebar.component.html -->
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+  <div class="app-brand demo">
+    <a routerLink="/dashboard" class="app-brand-link">
+      <img src="assets/logo.png" width="25%">
+      <span class="app-brand-text demo menu-text fw-bold ms-2 fs-big text-dark">TNGMS Training</span>
+    </a>
+  </div>
+  <div class="menu-divider mt-0"></div>
+  <div class="menu-inner-shadow"></div>
+
+  <ul class="menu-inner py-1">
+    <!-- Dashboard -->
+    <li class="menu-item" routerLinkActive="active">
+      <a routerLink="/dashboard" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+        <div>Dashboard</div>
+      </a>
+    </li>
+
+    <!-- Forms -->
+    <li class="menu-item" routerLinkActive="active">
+      <a routerLink="/forms" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-layout"></i>
+        <div>Forms</div>
+      </a>
+    </li>
+
+    <!-- Training -->
+    <li class="menu-item" routerLinkActive="active">
+      <a routerLink="/training" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-chalkboard"></i>
+        <div>Training</div>
+      </a>
+    </li>
+
+    <!-- Members -->
+    <li class="menu-item" routerLinkActive="active">
+      <a routerLink="/members" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-group"></i>
+        <div>Members</div>
+      </a>
+    </li>
+
+    <!-- Master (dropdown) -->
+    <li class="menu-item" [class.open]="masterOpen" routerLinkActive="open">
+      <a href="javascript:void(0);" class="menu-link menu-toggle" (click)="masterOpen = !masterOpen">
+        <i class="menu-icon tf-icons bx bx-card"></i>
+        <div>Master</div>
+      </a>
+      <ul class="menu-sub" [style.display]="masterOpen ? 'block' : 'none'">
+        <li class="menu-item" routerLinkActive="active">
+          <a routerLink="/master/training-type" class="menu-link">
+            <div>Training Type</div>
+          </a>
+        </li>
+        <li class="menu-item" routerLinkActive="active">
+          <a routerLink="/master/training-location" class="menu-link">
+            <div>Training Location</div>
+          </a>
+        </li>
+        <li class="menu-item" routerLinkActive="active">
+          <a routerLink="/master/accommodation" class="menu-link">
+            <div>Accommodation</div>
+          </a>
+        </li>
+        <li class="menu-item" routerLinkActive="active">
+          <a routerLink="/master/questions" class="menu-link">
+            <div>Questions</div>
+          </a>
+        </li>
+        <li class="menu-item" routerLinkActive="active" *ngIf="isSuperAdmin">
+          <a routerLink="/master/users" class="menu-link">
+            <div>Users</div>
+          </a>
+        </li>
+        <li class="menu-item" routerLinkActive="active">
+          <a routerLink="/master/checklist" class="menu-link">
+            <div>Checklist</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Reports -->
+    <li class="menu-item" routerLinkActive="active">
+      <a routerLink="/reports" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-bar-chart-alt"></i>
+        <div>Report</div>
+      </a>
+    </li>
+  </ul>
+</aside>

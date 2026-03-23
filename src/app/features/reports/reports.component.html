@@ -1,0 +1,155 @@
+<!-- src/app/features/reports/reports.component.html -->
+<app-layout pageTitle="Report">
+
+  <!-- Training detail header (shown when a training is selected) -->
+  <div *ngIf="selectedTraining" class="mb-4">
+    <div class="card">
+      <div class="card-body text-center">
+        <h4 class="fw-bold">{{ selectedTraining.type }}</h4>
+        <p class="fw-bold mb-1">{{ selectedTraining.locationName }}</p>
+        <p class="fw-bold">{{ formatDate(selectedTraining.t_start) }} - {{ formatDate(selectedTraining.t_end) }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Training List (when no training selected) -->
+  <div *ngIf="!trainingId">
+    <div class="d-flex justify-content-between mb-3">
+      <h5>All Reports</h5>
+      <div class="input-group" style="width:280px;">
+        <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0"
+               placeholder="Search training..." [(ngModel)]="searchText">
+      </div>
+    </div>
+    <table class="table table-hover shadow">
+      <thead class="table-dark">
+        <tr><th>Name</th><th>Type</th><th>Location</th><th>Start</th><th>End</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of filteredTrainings" (click)="selectTraining(t.id)" style="cursor:pointer;">
+          <td>{{ t.name }}</td>
+          <td>{{ t.type }}</td>
+          <td>{{ t.locations }}</td>
+          <td>{{ formatDate(t.t_start) }}</td>
+          <td>{{ formatDate(t.t_end) }}</td>
+        </tr>
+        <tr *ngIf="filteredTrainings.length === 0">
+          <td colspan="5" class="text-center text-muted py-4">No trainings found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Report Detail (when training is selected) -->
+  <div *ngIf="trainingId && reportData">
+    <button class="btn btn-outline-secondary btn-sm mb-3" (click)="clearTraining()">
+      <i class="fa fa-arrow-left me-1"></i> Back to List
+    </button>
+
+    <!-- PARTICIPATION Section -->
+    <h5 class="ms-1 mb-3">PARTICIPATION</h5>
+    <div class="row g-3 mb-4">
+      <!-- Invite/Report Polar Chart -->
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <h5 class="card-header text-center">Invite / Report</h5>
+          <div class="card-body" style="height:280px;">
+            <canvas id="polarChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Participant by Subject Bar Chart -->
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <h5 class="card-header text-center">Participant - Subject</h5>
+          <div class="card-body" style="height:280px;">
+            <canvas id="barchartline"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASSESSMENT Section -->
+    <h5 class="ms-1 mb-3">Assessment Report</h5>
+    <div class="row g-3 mb-4">
+      <!-- Attendance Bar Chart -->
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <h5 class="card-header text-center">Attendance</h5>
+          <div class="card-body" style="height:280px;">
+            <canvas id="barchartsec"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Assessment Line Chart (ApexCharts) -->
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <h5 class="card-header text-center">Assessment</h5>
+          <div class="card-body">
+            <div id="lineChart" style="width:100%; height:250px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance Detail Table -->
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Attendance Details</h5>
+      </div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead class="table-dark">
+            <tr class="attendHeader">
+              <th *ngFor="let h of attendHeaders">{{ h }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of attendRows">
+              <td *ngFor="let cell of row">{{ cell }}</td>
+            </tr>
+            <tr *ngIf="attendRows.length === 0">
+              <td [attr.colspan]="attendHeaders.length || 1" class="text-center text-muted">No attendance data</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Stats Summary Cards -->
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="card card-border-shadow-primary text-center p-3">
+          <h2 class="text-primary fw-bold mb-0">{{ reportData.invited || 0 }}</h2>
+          <small class="text-muted">Invited</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-border-shadow-warning text-center p-3">
+          <h2 class="text-warning fw-bold mb-0">{{ reportData.rsvp || 0 }}</h2>
+          <small class="text-muted">Accepted (RSVP)</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-border-shadow-success text-center p-3">
+          <h2 class="text-success fw-bold mb-0">{{ reportData.certificate || 0 }}</h2>
+          <small class="text-muted">Certificates</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-border-shadow-info text-center p-3">
+          <h2 class="text-info fw-bold mb-0">{{ reportData.feedback || 0 }}</h2>
+          <small class="text-muted">Feedback</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2 text-muted">Loading report...</p>
+  </div>
+
+</app-layout>

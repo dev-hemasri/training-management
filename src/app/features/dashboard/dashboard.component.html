@@ -1,0 +1,204 @@
+<!-- src/app/features/dashboard/dashboard.component.html -->
+<app-layout pageTitle="Dashboard">
+
+  <!-- Filter Section -->
+  <section>
+    <div>
+      <div class="footertitle" style="background-color:#daebf2; padding:10px;">
+        <select id="typeStatus" class="form-select d-inline-block" style="width:auto;"
+          [(ngModel)]="filters.status" (change)="onFilterChange()">
+          <option value="">Status</option>
+          <option value="Upcoming">Upcoming</option>
+          <option value="Completed">Completed</option>
+        </select>
+
+        <select id="typeSelect" class="form-select d-inline-block ms-2" style="width:auto;"
+          [(ngModel)]="filters.type" (change)="onFilterChange()">
+          <option value="">Type</option>
+          <option *ngFor="let t of typeOptions" [value]="t">{{ t }}</option>
+        </select>
+
+        <button class="btn btn-primary ms-2" (click)="applyFilter()">Submit</button>
+
+        <select class="form-select d-inline-block ms-2" style="width:auto;"
+          [(ngModel)]="filters.region" (change)="onRegionChange()">
+          <option value="">Region</option>
+          <option *ngFor="let r of regionOptions" [value]="r">{{ r }}</option>
+        </select>
+
+        <select class="form-select d-inline-block ms-2" style="width:auto;"
+          [(ngModel)]="filters.district" (change)="onFilterChange()">
+          <option value="">District</option>
+          <option *ngFor="let d of districtOptions" [value]="d">{{ d }}</option>
+        </select>
+
+        <select class="form-select d-inline-block ms-2" style="width:auto;"
+          [(ngModel)]="filters.school" (change)="onFilterChange()">
+          <option value="">School</option>
+          <option *ngFor="let s of schoolOptions" [value]="s">{{ s }}</option>
+        </select>
+
+        <select class="form-select d-inline-block ms-2 mt-2" style="width:auto;"
+          [(ngModel)]="filters.subject" (change)="onFilterChange()">
+          <option value="">Subject</option>
+          <option *ngFor="let sub of subjectOptions" [value]="sub">{{ sub }}</option>
+        </select>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="container mt-3 mb-3" style="padding:0;">
+        <div class="row">
+          <!-- Completed -->
+          <div class="col-md-3">
+            <div class="card card-border-shadow-primary">
+              <div class="card-body" style="padding-top:15px;">
+                <p class="text-secondary mb-0 w-100 text-center">Completed</p>
+                <div class="col-md-6 text-center float-start">
+                  <h4 class="text-primary mb-0 fw-bold">{{ stats.upCount }}</h4>
+                  <p class="text-secondary mb-0">Training</p>
+                </div>
+                <div class="col-md-6 text-center float-start">
+                  <h4 class="text-primary mb-0 fw-bold">{{ stats.sessionCount }}</h4>
+                  <p class="text-secondary mb-0">Session</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Participant -->
+          <div class="col-md-3">
+            <div class="card card-border-shadow-warning">
+              <div class="card-body" style="padding-top:15px;">
+                <p class="text-secondary mb-0 w-100 text-center">Participant</p>
+                <div class="col-md-6 text-center float-start">
+                  <h4 class="text-warning mb-0 fw-bold">{{ stats.onCount }}</h4>
+                  <p class="text-secondary mb-0">Invited</p>
+                </div>
+                <div class="col-md-6 text-center float-start">
+                  <h4 class="text-warning mb-0 fw-bold">{{ stats.acceptedCount }}</h4>
+                  <p class="text-secondary mb-0">Accepted</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TADA -->
+          <div class="col-md-3">
+            <div class="card card-border-shadow-success">
+              <div class="card-body" style="padding-top:15px;">
+                <p class="text-secondary mb-0 w-100 text-center">TADA</p>
+                <div class="col-md-5 text-center float-start">
+                  <h4 class="text-success mb-0 fw-bold">{{ stats.acceptedCountSend }}</h4>
+                  <p class="text-secondary mb-0">Send</p>
+                </div>
+                <div class="col-md-7 text-center float-start">
+                  <h4 class="text-success mb-0 fw-bold">{{ stats.acceptedCountReceived }}</h4>
+                  <p class="text-secondary mb-0">Received</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attendance -->
+          <div class="col-md-3" style="padding:0;">
+            <div class="card card-border-shadow-info">
+              <div class="card-body" style="padding-top:15px;">
+                <p class="text-secondary mb-0 w-100 text-center">Attendance</p>
+                <div class="col-md-6 text-center float-start">
+                  <h4 class="text-info mb-0 fw-bold">{{ stats.avgAttendance }}</h4>
+                  <p class="text-secondary mb-0">Count</p>
+                </div>
+                <div class="col-md-6 text-center float-start">
+                  <h4 class="text-info mb-0 fw-bold">{{ stats.avgPerAttendance }}%</h4>
+                  <p class="text-secondary mb-0">Avg. Per</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trainings Section -->
+      <div class="mt-2">
+        <h3>Trainings</h3>
+      </div>
+      <div class="row g-3">
+        <!-- Training List -->
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div style="max-height:50vh; overflow-y:auto;">
+              <table class="table shadow" style="width:100%;">
+                <thead class="table-dark">
+                  <th>Name</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let t of trainingList"
+                      class="cursor-pointer"
+                      (click)="goToTrainingReport(t.id)"
+                      style="cursor:pointer;">
+                    <td>{{ t.name }}</td>
+                  </tr>
+                  <tr *ngIf="trainingList.length === 0">
+                    <td class="text-center">No trainings found.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tamil Nadu Map -->
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <h5 class="card-header text-center">District Teachers</h5>
+            <div class="card-body p-0" style="position:relative; text-align:center;">
+              <svg id="tamilnaduMap" xmlns="http://www.w3.org/2000/svg"
+                   viewBox="0 0 1591.1 1975.3"
+                   style="position:relative; max-height:40vh; width:38vw;"></svg>
+              <div id="mapTooltip" style="position:absolute; background:#fff; border:1px solid #333;
+                   padding:5px 10px; font-size:14px; pointer-events:none; display:none; z-index:999;
+                   box-shadow:0 0 5px rgba(0,0,0,0.3);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row g-3 mt-1">
+        <!-- Subject Bar Chart -->
+        <div class="col-md-9">
+          <div class="card mb-3">
+            <h5 class="card-header text-center">Subject Teachers</h5>
+            <div class="card-body">
+              <canvas id="polarChartquest" style="width:100% !important; height:280px !important;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Member List -->
+        <div class="col-md-3">
+          <div class="card mb-3">
+            <div style="max-height:45vh; overflow-y:auto;">
+              <table class="table shadow" style="width:100%;">
+                <thead class="table-dark">
+                  <th>Name</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let m of memberList"
+                      style="cursor:pointer; font-size:13px;"
+                      (click)="goToMemberReport(m.id)">
+                    <td>{{ m.name }}</td>
+                  </tr>
+                  <tr *ngIf="memberList.length === 0">
+                    <td class="text-center">No members found.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</app-layout>

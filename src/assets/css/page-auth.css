@@ -1,0 +1,279 @@
+.authentication-wrapper {
+    display: flex;
+    flex-basis: 100%;
+    min-height: 100vh;
+    width: 100%
+}
+
+.authentication-wrapper .authentication-inner {
+    width: 100%
+}
+
+.authentication-wrapper.authentication-basic {
+    align-items: center;
+    justify-content: center;
+    overflow: hidden
+}
+
+.authentication-wrapper.authentication-cover {
+    align-items: flex-start
+}
+
+.authentication-wrapper.authentication-cover .authentication-inner {
+    height: 100vh
+}
+
+.authentication-wrapper.authentication-basic .authentication-inner {
+    max-width: 25rem;
+    position: relative
+}
+
+.authentication-wrapper.authentication-basic .authentication-inner:before {
+    width: 21rem;
+    height: 21rem;
+    content: " ";
+    position: fixed;
+    top: -100px;
+    /*  background: ; */
+    background-size: contain
+}
+
+html:not([dir=rtl]) .authentication-wrapper.authentication-basic .authentication-inner:before {
+    left: -100px
+}
+
+[dir=rtl] .authentication-wrapper.authentication-basic .authentication-inner:before {
+    right: -100px;
+    transform: rotate(90deg)
+}
+
+.authentication-wrapper.authentication-basic .authentication-inner:after {
+    width: 7rem;
+    height: 14.125rem;
+    content: " ";
+    position: fixed;
+    bottom: 0;
+    /* background-image: ; */
+    background-size: contain
+}
+
+html:not([dir=rtl]) .authentication-wrapper.authentication-basic .authentication-inner:after {
+    right: 0
+}
+
+[dir=rtl] .authentication-wrapper.authentication-basic .authentication-inner:after {
+    left: 0;
+    transform: rotate(180deg)
+}
+
+.authentication-wrapper.authentication-basic .authentication-inner .card {
+    z-index: 1
+}
+
+.authentication-wrapper.authentication-basic .authentication-inner .card .app-brand {
+    margin-bottom: 2.5rem
+}
+
+.authentication-wrapper .auth-input-wrapper .auth-input {
+    max-width: 50px;
+    padding-left: .4rem;
+    padding-right: .4rem;
+    font-size: 150%
+}
+
+.authentication-cover-img {
+    margin-bottom: 1rem
+}
+
+@media(max-width: 575.98px) {
+    .authentication-wrapper .auth-input-wrapper .auth-input {
+        font-size: 1.125rem
+    }
+}
+
+#twoStepsForm .fv-plugins-bootstrap5-row-invalid .form-control {
+    border-color: #ff5b5c
+}
+
+.light-style .authentication-wrapper .authentication-bg {
+    background-color: #fff
+}
+
+.dark-style .authentication-wrapper .authentication-bg {
+    background-color: #283144
+}
+
+@media(min-height: 737px) {
+    .authentication-cover-img {
+        margin-bottom: 3rem
+    }
+}
+
+.layout-page {
+    padding-top: 62px !important;
+}
+
+.timeline {
+    position: relative
+}
+
+.timeline:before {
+    border-right: 2px solid #dee2e6;
+    content: "";
+    height: 100%;
+    left: 1rem;
+    position: absolute;
+    top: 0
+}
+
+.timeline-block {
+    position: relative
+}
+
+.timeline-block:after {
+    clear: both;
+    content: "";
+    display: table
+}
+
+.timeline-block:first-child {
+    margin-top: 0
+}
+
+.timeline-block:last-child {
+    margin-bottom: 0
+}
+
+.timeline-step {
+    align-items: center;
+    background: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 600;
+    height: 26px;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    text-align: center;
+    transform: translateX(-50%);
+    width: 26px;
+    z-index: 1
+}
+
+.timeline-step i,
+.timeline-step svg {
+    line-height: 1.4
+}
+
+.timeline-content {
+    margin-left: 45px;
+    padding-top: .35rem;
+    position: relative;
+    top: -6px
+}
+
+.timeline-content:after {
+    clear: both;
+    content: "";
+    display: table
+}
+
+@media (min-width: 992px) {
+    .timeline:before {
+        left: 50%;
+        margin-left: -1px
+    }
+
+    .timeline-step {
+        left: 50%
+    }
+
+    .timeline-content {
+        width: 38%
+    }
+
+    .timeline-block:nth-child(2n) .timeline-content {
+        float: right
+    }
+}
+
+.timeline-one-side .timeline-step,
+.timeline-one-side:before {
+    left: 1rem
+}
+
+.timeline-one-side .timeline-content {
+    width: auto
+}
+
+@media (min-width: 992px) {
+    .timeline-one-side .timeline-content {
+        max-width: 30rem
+    }
+}
+
+.timeline-one-side .timeline-block:nth-child(2n) .timeline-content {
+    float: none
+}
+
+.icon-with-plus {
+    position: relative;
+    display: inline-block;
+}
+
+.icon-with-plus .fa-plus {
+    position: absolute;
+    top: 0;
+    right: -10px;
+    /* Adjust this value to position the + symbol as desired */
+    font-size: 0.5em;
+    /* Adjust this value to resize the + symbol relative to the book icon */
+}
+
+@media print {
+    .qust_height {
+        page-break-inside: avoid !important;
+    }
+
+    .choices li {
+        word-break: break-all;
+    }
+
+    h3 {
+        font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    }
+}
+
+h3 {
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+.question p,
+.qust_height h6,
+.qust_height span {
+    color: #000;
+    word-break: break-all;
+}
+
+.choices ul {
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.choices li {
+    width: calc(50% - 10px);
+    margin: 5px 0;
+    display: flex;
+    align-items: baseline;
+    flex-flow: column;
+    word-break: break-all;
+    color: #000;
+}
+
+.choices li p {
+    margin-bottom: 0;
+    word-break: break-all;
+}

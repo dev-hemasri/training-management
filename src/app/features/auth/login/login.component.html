@@ -1,0 +1,70 @@
+<!-- src/app/features/auth/login/login.component.html -->
+
+  <div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+      <div class="authentication-inner py-4" style="margin-bottom: 102px;">
+
+        <div class="card" style="background-color:transparent; border-radius:18px; width:115%;">
+          <div class="card-body">
+
+            <!-- Logo -->
+            <div class="image text-center mb-3">
+              <img src="assets/logo.png" width="25%">
+            </div>
+
+            <div class="app-brand justify-content-center">
+              <a href="javascript:void(0);" class="app-brand-link gap-2">
+                <span class="app-brand-text demo h4" style="color:#844fc1; font-weight:bold;">TNGMS Training Login</span>
+              </a>
+            </div>
+
+            <!-- Login Form -->
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mb-3">
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="username"
+                  placeholder="User name*"
+                  autofocus>
+                <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+                     class="text-danger small">Username is required.</div>
+              </div>
+
+              <div class="mb-3 form-password-toggle">
+                <div class="input-group input-group-merge">
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    class="form-control"
+                    formControlName="password"
+                    placeholder="password*">
+                  <span class="input-group-text cursor-pointer" (click)="togglePassword()">
+                    <i class="fa" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                  </span>
+                </div>
+                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                     class="text-danger small">Password is required.</div>
+              </div>
+
+              <div class="col-md-12 my-4 float-left">
+                <a class="forgot" href="#/forgot-password" style="color:#00599b;">Forgot Password?</a>
+                <button
+                  type="submit"
+                  [disabled]="loginForm.invalid || isLoading"
+                  class="btn btn-primary float-end"
+                  style="background:#4F53C1; border:0; padding:10px 35px; border-radius:10px;">
+                  <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1"></span>
+                  Login
+                </button>
+              </div>
+            </form>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>

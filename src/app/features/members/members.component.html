@@ -1,0 +1,102 @@
+<!-- src/app/features/members/members.component.html -->
+<app-layout pageTitle="Members">
+
+  <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+    <div class="input-group" style="width:300px;">
+      <span class="input-group-text bg-white border-end-0">
+        <i class="fa fa-search text-muted"></i>
+      </span>
+      <input type="text" class="form-control border-start-0 ps-0"
+             placeholder="Search members..." [(ngModel)]="searchText">
+    </div>
+    <button class="btn btn-primary" (click)="openNewMember()">
+      <i class="fa fa-plus me-1"></i> Add Member
+    </button>
+  </div>
+
+  <table class="table table-hover shadow">
+    <thead class="table-dark">
+      <tr>
+        <th>Name</th>
+        <th>Staff ID</th>
+        <th>District</th>
+        <th>Subject</th>
+        <th>School</th>
+        <th>Mobile</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of filteredList"
+          style="cursor:pointer;"
+          (click)="openEditMember(m)">
+        <td class="fw-bold text-dark">{{ m.name || '-' }}</td>
+        <td>{{ m.staff_id || '-' }}</td>
+        <td>{{ m.district || '-' }}</td>
+        <td>{{ m.subject || '-' }}</td>
+        <td>{{ m.school || '-' }}</td>
+        <td>{{ m.mobile || '-' }}</td>
+      </tr>
+      <tr *ngIf="filteredList.length === 0">
+        <td colspan="6" class="text-center text-muted py-4">No members found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Member Modal -->
+  <div class="modal fade" id="memberModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-bottom pb-3">
+          <h5 class="modal-title">
+            {{ isEditMode ? 'Edit Member' : 'Add Member' }}
+            <span class="float-end text-danger" style="font-size:12px;">(*) Required</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="mb-3 col-sm-6">
+              <label>Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="form.name" placeholder="Full Name">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Staff ID</label>
+              <input type="text" class="form-control" [(ngModel)]="form.staff_id" placeholder="Staff ID">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Mobile</label>
+              <input type="tel" class="form-control" [(ngModel)]="form.mobile" placeholder="Mobile No.">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Email</label>
+              <input type="email" class="form-control" [(ngModel)]="form.email" placeholder="Email">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>District</label>
+              <input type="text" class="form-control" [(ngModel)]="form.district" placeholder="District">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>School</label>
+              <input type="text" class="form-control" [(ngModel)]="form.school" placeholder="School">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Subject</label>
+              <input type="text" class="form-control" [(ngModel)]="form.subject" placeholder="Subject">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Designation</label>
+              <input type="text" class="form-control" [(ngModel)]="form.designation" placeholder="Designation">
+            </div>
+          </div>
+          <div class="text-end mt-3">
+            <button class="btn btn-primary" (click)="submitMember()" [disabled]="isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+              {{ isEditMode ? 'Update' : 'Submit' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-layout>

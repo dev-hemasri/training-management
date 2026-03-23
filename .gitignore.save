@@ -1,0 +1,36 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+tmp/
+out-tsc/
+
+# Angular cache
+.angular/
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+src/environments/environment.ts
+src/environments/environment.prod.ts
+.DS_Store
+**/.DS_Store
+__MACOSX/
+/dist
+/node_modules
+/.angular/cache
+

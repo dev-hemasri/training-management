@@ -1,0 +1,135 @@
+<!-- src/app/features/master/training-type/training-type.component.html -->
+<app-layout pageTitle="Training Type">
+
+  <!-- Toolbar -->
+  <div class="d-flex justify-content-end align-items-center mt-3 mb-3 gap-2">
+    <div class="input-group" style="width:250px;">
+      <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
+      <input type="text" class="form-control border-start-0 ps-0"
+             placeholder="Search..." [(ngModel)]="searchText">
+    </div>
+    <button class="btn btn-rounded btn-dark" (click)="openNewModal()">
+      <i class="fa fa-plus me-1"></i> New Type
+    </button>
+  </div>
+
+  <!-- Table -->
+  <table class="table table-hover shadow">
+    <thead class="table-dark">
+      <tr><th>Name</th><th>Round</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of filteredList" class="cursor-pointer" (click)="openEditModal(item)" style="cursor:pointer;">
+        <td>{{ item.name }}</td>
+        <td>
+          <span *ngFor="let d of item.detail" class="badge bg-label-secondary me-1 mb-1">{{ d }}</span>
+        </td>
+      </tr>
+      <tr *ngIf="filteredList.length === 0">
+        <td colspan="2" class="text-center">No data available</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-between align-items-center mt-2">
+    <small class="text-muted">Showing {{ filteredList.length }} of {{ trainingTypes.length }} entries</small>
+  </div>
+
+  <!-- Add New Type Modal -->
+  <div class="modal fade" id="newTypeModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-bottom pb-3">
+          <h5 class="modal-title w-100">
+            Training Type
+            <span class="float-end text-danger" style="font-size:12px;">(*) Required</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newType.name" placeholder="Name" style="width:48%;">
+          </div>
+          <div class="d-flex align-items-start gap-2 mt-3">
+            <div style="width:65%;">
+              <label class="form-label">Type <span class="text-danger">*</span></label>
+              <input *ngFor="let t of newType.detail; let i = index"
+                     type="text" class="form-control my-1" [(ngModel)]="newType.detail[i]"
+                     placeholder="Enter Type">
+            </div>
+            <div class="mt-4 pt-2">
+              <button class="btn btn-primary btn-sm" (click)="addTypeField()">+</button>
+            </div>
+          </div>
+          <div class="mt-4 text-end">
+            <button class="btn btn-primary" (click)="submitNewType()" [disabled]="isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Type Modal -->
+  <div class="modal fade" id="editTypeModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title w-100">
+            Edit Training Type
+            <span class="float-end text-danger" style="font-size:12px;">(*) Required</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="editType.name">
+          </div>
+          <div>
+            <label class="form-label">Type <span class="text-danger">*</span></label>
+            <div *ngFor="let t of editType.detail; let i = index" class="d-flex mb-2 align-items-center gap-2">
+              <input type="text" class="form-control" [(ngModel)]="editType.detail[i]">
+              <button *ngIf="i > 0" class="btn btn-danger btn-sm" (click)="removeEditTypeField(i)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+            <button class="btn btn-success btn-sm mt-1" (click)="addEditTypeField()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+          <button class="btn btn-primary float-end" (click)="updateType()" [disabled]="isSubmitting">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal fade" id="deleteTypeModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Confirmation</h5>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this training type?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="deleteType()">Ok</button>
+          <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-layout>

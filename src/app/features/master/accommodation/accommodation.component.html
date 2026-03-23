@@ -1,0 +1,86 @@
+<!-- src/app/features/master/accommodation/accommodation.component.html -->
+<app-layout pageTitle="Accommodation">
+
+  <div class="d-flex justify-content-end align-items-center mt-3 mb-2 gap-2">
+    <div class="input-group" style="width:250px;">
+      <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
+      <input type="text" class="form-control border-start-0 ps-0"
+             placeholder="Search..." [(ngModel)]="searchText">
+    </div>
+    <button class="btn btn-rounded btn-dark" (click)="openNewModal()">
+      <i class="fa fa-plus me-1"></i> Add Accommodation
+    </button>
+  </div>
+
+  <table class="table shadow">
+    <thead class="table-dark">
+      <tr><th>Place</th><th>Link</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of filteredList" class="cursor-pointer" (click)="openEditModal(a)" style="cursor:pointer;">
+        <td>{{ a.name }}</td>
+        <td style="word-break:break-all; white-space:normal; max-width:500px;">
+          <a [href]="a.link" target="_blank" (click)="$event.stopPropagation()">{{ a.link }}</a>
+        </td>
+      </tr>
+      <tr *ngIf="filteredList.length === 0">
+        <td colspan="2" class="text-center">No accommodation found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Add Modal -->
+  <div class="modal fade" id="newAccomModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-bottom pb-3">
+          <h5 class="modal-title w-100">
+            Accommodation <span class="float-end text-danger" style="font-size:12px;">(*) Required</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-1">
+            <label class="form-label">Place <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newAccom.name" placeholder="Enter Accommodation">
+          </div>
+          <div class="mb-1">
+            <label class="form-label">Map Link <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newAccom.link" placeholder="Enter Link">
+          </div>
+          <div class="text-end mt-3">
+            <button class="btn btn-primary" (click)="submitAccom()" [disabled]="isSubmitting">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editAccomModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title w-100">
+            Edit Accommodation <span class="float-end text-danger" style="font-size:12px;">(*) Required</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-1">
+            <label class="form-label">Place <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="editAccom.name" placeholder="Enter Place">
+          </div>
+          <div class="mb-1">
+            <label class="form-label">Link <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="editAccom.link" placeholder="Enter Link">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="updateAccom()" [disabled]="isSubmitting">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-layout>

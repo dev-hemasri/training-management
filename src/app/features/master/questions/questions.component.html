@@ -1,0 +1,129 @@
+<!-- src/app/features/master/questions/questions.component.html -->
+<app-layout pageTitle="Questions">
+
+  <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <div class="input-group" style="width:250px;">
+        <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0"
+               placeholder="Search Question..." [(ngModel)]="searchText">
+      </div>
+      <button class="btn btn-rounded btn-dark" (click)="openNewQuestionModal()">
+        <i class="fa fa-plus me-1"></i> New Question
+      </button>
+    </div>
+  </div>
+
+  <table class="table shadow">
+    <thead class="table-dark">
+      <tr><th>Question</th><th>Answer Type</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let q of filteredList" class="cursor-pointer" (click)="openEditQuestion(q)" style="cursor:pointer;">
+        <td style="word-break:break-word; white-space:normal; max-width:500px;">{{ q.quest }}</td>
+        <td>{{ getQTypeName(q.qtype) }}</td>
+      </tr>
+      <tr *ngIf="filteredList.length === 0">
+        <td colspan="2" class="text-center">No questions found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Question Modal -->
+  <div class="modal fade" id="questionModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-bottom pb-3">
+          <h5 class="modal-title w-100">
+            {{ isEditMode ? 'Edit Question' : 'New Question' }}
+            <span class="float-end text-danger" style="font-size:12px;">(*) Required</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Question Text -->
+          <div class="mb-3">
+            <label class="form-label">Question <span class="text-danger">*</span></label>
+            <textarea class="form-control" rows="3" [(ngModel)]="form.quest" placeholder="Enter Question"
+              (blur)="updatePreview()"></textarea>
+          </div>
+
+          <!-- Answer Type -->
+          <div class="mb-3">
+            <label class="form-label">Answer Type <span class="text-danger">*</span></label>
+            <select class="form-select" [(ngModel)]="form.qtype" (change)="onAnswerTypeChange()">
+              <option value="">--Select--</option>
+              <option value="1">Short Text</option>
+              <option value="2">Long Text</option>
+              <option value="3">Contact No</option>
+              <option value="4">Email</option>
+              <option value="5">Single Select</option>
+              <option value="6">Multiple Select</option>
+              <option value="7">Dropdown</option>
+              <option value="8">Single Image</option>
+              <option value="9">Multiple Image</option>
+              <option value="10">Video</option>
+              <option value="11">Audio</option>
+              <option value="12">Rating</option>
+              <option value="13">Ranking</option>
+              <option value="14">Feedback</option>
+              <option value="15">Matrix Ranking</option>
+            </select>
+          </div>
+
+          <!-- Options (for types 5,6,7,13,15) -->
+          <div *ngIf="showOptions" class="mb-5">
+            <label class="d-flex justify-content-between">
+              Option(s)
+            </label>
+            <div class="d-flex gap-2 align-items-start">
+              <div style="width:65%;">
+                <input *ngFor="let opt of form.options; let i = index"
+                       type="text" class="form-control my-1"
+                       [(ngModel)]="form.options[i]" [placeholder]="'Option ' + (i+1)">
+              </div>
+              <div class="mt-1">
+                <button class="btn btn-primary btn-sm" (click)="addOption()">+</button>
+                <button class="btn btn-danger btn-sm mt-1" (click)="removeOption()" *ngIf="form.options.length > 2">x</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div *ngIf="form.quest" class="mt-3 mb-3 p-2 border-top">
+            <h6 class="text-center">Preview</h6>
+            <p style="word-break:break-word;">{{ form.quest }}</p>
+            <div *ngIf="showOptions">
+              <div *ngFor="let opt of form.options; let i = index">
+                <span class="fw-bold">{{ i+1 }}</span>: {{ opt }}
+              </div>
+            </div>
+          </div>
+
+          <div class="text-end mt-3">
+            <button *ngIf="isEditMode" class="btn btn-danger me-2" (click)="confirmDeleteQuestion()">Delete</button>
+            <button class="btn btn-primary" (click)="submitQuestion()" [disabled]="isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+              {{ isEditMode ? 'Update' : 'Submit' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal fade" id="deleteQuestionModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Delete Confirmation</h5></div>
+        <div class="modal-body"><p>Are you sure you want to delete this question?</p></div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="deleteQuestion()">Ok</button>
+          <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-layout>

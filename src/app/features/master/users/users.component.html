@@ -1,0 +1,165 @@
+<!-- src/app/features/master/users/users.component.html -->
+<app-layout pageTitle="Users">
+
+  <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <div class="input-group" style="width:250px;">
+        <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0"
+               placeholder="Search User..." [(ngModel)]="searchText">
+      </div>
+      <button *ngIf="isSuperAdmin" class="btn btn-rounded btn-dark" (click)="openNewUserModal()">
+        <i class="fa fa-plus me-1"></i> New User
+      </button>
+      <button class="btn btn-rounded btn-primary px-2 py-2" style="font-size:20px;" (click)="openUploadModal()">
+        <i class="fa fa-upload"></i>
+      </button>
+    </div>
+  </div>
+
+  <table class="table shadow mt-3 w-100">
+    <thead class="table-dark">
+      <tr>
+        <th>Name</th><th>Username</th><th>Mobile No.</th>
+        <th>Email</th><th>District</th><th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of filteredList" class="cursor-pointer" (click)="openEditUser(u)" style="cursor:pointer;">
+        <td class="fw-bold text-dark">{{ u.name || '-' }}</td>
+        <td>{{ u.username || '-' }}</td>
+        <td>{{ u.mobile || '-' }}</td>
+        <td>{{ u.email || '-' }}</td>
+        <td>{{ u.district || '-' }}</td>
+        <td><span class="badge bg-label-primary">{{ u.role || '-' }}</span></td>
+      </tr>
+      <tr *ngIf="filteredList.length === 0">
+        <td colspan="6" class="text-center">No users found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- User Form Modal -->
+  <div class="modal fade" id="userModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-bottom pb-3">
+          <h5 class="modal-title w-100">
+            User <span class="float-end text-danger" style="font-size:12px;">(*) Required</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!-- Staff ID -->
+            <div class="mb-3 col-sm-6 position-relative">
+              <label>Staff ID</label>
+              <input type="text" class="form-control" [(ngModel)]="form.staff_id"
+                     placeholder="Search Staff ID..." (keyup)="searchStaff()"
+                     autocomplete="off">
+              <div class="dropdown-menu w-100 shadow-lg"
+                   [style.display]="staffSuggestions.length ? 'block' : 'none'"
+                   style="position:absolute; top:100%; left:0; z-index:1050; max-height:250px; overflow-y:auto;">
+                <a *ngFor="let s of staffSuggestions"
+                   href="javascript:void(0);" class="dropdown-item border-bottom py-2"
+                   (click)="selectStaff(s)">
+                  <div class="text-primary fw-bold">{{ s.staff_id }}</div>
+                  <div class="text-dark fw-semibold">{{ s.name }}</div>
+                  <div class="text-muted small">{{ s.mobile }}</div>
+                  <div class="text-muted small">{{ s.district }}</div>
+                </a>
+              </div>
+            </div>
+
+            <div class="mb-3 col-sm-6">
+              <label>Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="form.name" [disabled]="autoFilled">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Mobile <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" [(ngModel)]="form.mobile" [disabled]="autoFilled">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Email <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" [(ngModel)]="form.email" [disabled]="autoFilled">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>District <span class="text-danger">*</span></label>
+              <select class="form-control" [(ngModel)]="form.district" [disabled]="autoFilled">
+                <option value="">--Select--</option>
+                <option *ngFor="let d of districts" [value]="d">{{ d }}</option>
+              </select>
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Username <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="form.username">
+            </div>
+            <div class="mb-3 col-sm-6">
+              <label>Role <span class="text-danger">*</span></label>
+              <select class="form-control" [(ngModel)]="form.role">
+                <option value="">--Select--</option>
+                <option>Super Admin</option><option>Admin</option>
+                <option>Team</option><option>Trainer</option><option>Support</option>
+              </select>
+            </div>
+            <div class="mb-3 col-sm-12" *ngIf="!isEditMode">
+              <label>Password <span class="text-danger">*</span></label>
+              <input type="password" class="form-control" [(ngModel)]="form.password" placeholder="Enter Password">
+              <small *ngIf="form.password && form.password.length < 6" class="text-danger">At least 6 characters</small>
+            </div>
+            <div class="mb-3 col-sm-12">
+              <label>Notes</label>
+              <textarea class="form-control" [(ngModel)]="form.notes" placeholder="Enter something..."></textarea>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <button *ngIf="isEditMode" class="btn btn-danger" (click)="confirmDeleteUser()">Delete</button>
+            <button class="btn btn-success ms-4" (click)="submitUser()" [disabled]="isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Delete Confirmation</h5></div>
+        <div class="modal-body"><p>Are you sure you want to delete this User?</p></div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="deleteUser()">Ok</button>
+          <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div class="modal fade" id="uploadModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Bulk Upload</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Upload <span class="text-danger">*</span></label>
+            <input type="file" class="form-control" accept=".csv,.xlsx" (change)="onFileSelect($event)">
+            <small class="text-muted">Only .csv or .xlsx allowed</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" (click)="submitUpload()" [disabled]="isSubmitting">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-layout>
